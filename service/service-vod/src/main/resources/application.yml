@@ -1,0 +1,23 @@
+server:
+  port: 8130
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+  discovery:
+    server-addr: localhost:8848
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  redis:
+    host: 192.168.75.135
+#    sentinel:
+#      transport:
+#        port: 8011 # 跟控制台交流的端口，随意指定一个未使用的端口即可
+#        dashboard: localhost:8080 # 指定控制台服务的地址
+#      eager: true #取消控制台懒加载，服务启动即可看到sentinel中对当前服务的监控
+#      filter:
+#        url-patterns: /** #默认拦截规则为 /*
+#阿里Vod配置

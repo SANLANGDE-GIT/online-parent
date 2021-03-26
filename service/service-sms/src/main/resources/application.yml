@@ -1,0 +1,39 @@
+server:
+  port: 8150
+  tomcat:
+    max-threads: 2  #设置tomcat最大并发数量：默认200一般不修改
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-sms
+  #Nacos 注册地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        port: 8011 # 跟控制台交流的端口，随意指定一个未使用的端口即可
+        dashboard: localhost:8080 # 指定控制台服务的地址
+      eager: true #取消控制台懒加载，服务启动即可看到sentinel中对当前服务的监控
+      filter:
+        url-patterns: /** #默认拦截规则为 /*
+  redis:
+    host: 192.168.75.135
+    port: 6379
+
+#设置Feign客户端超时时间（openfeign默认支持ribbon）
+ribbon:
+  ConnectTimeout: 5000 #指的是建立连接所用的时间，适用于网络状况正常的情况下，两端连接所用的时间
+  ReadTimeout: 5000 #指的是建立连接后从服务器读取到可用资源所用的时间
+service-oss: # 调用的提供者的名称:配置负载均衡策略
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+
+#开启Feign对Sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+#阿里云短信配置

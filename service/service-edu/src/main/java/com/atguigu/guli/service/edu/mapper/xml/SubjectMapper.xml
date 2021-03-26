@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.guli.service.edu.mapper.SubjectMapper">
+    <resultMap id="selectNestedListMap" type="com.atguigu.guli.service.edu.entity.vo.SubjectVo">
+        <id column="id" property="id"></id>
+        <result column="title" property="title"></result>
+        <result column="sort" property="sort"></result>
+        <collection property="children" ofType="com.atguigu.guli.service.edu.entity.Subject">
+            <id column="cid" property="id"></id>
+            <result column="ctitle" property="title"></result>
+            <result column="csort" property="sort"></result>
+            <result column="cpid" property="parentId"></result>
+        </collection>
+    </resultMap>
+    <!-- List<Subject> selectPSubjects(); -->
+    <select id="nestedList" resultMap="selectNestedListMap">
+        SELECT p.id , p.title , p.sort ,p.`parent_id`
+        ,c.`id` cid ,c.title ctitle, c.sort csort,c.`parent_id` cpid
+        FROM edu_subject p
+        JOIN edu_subject c
+        ON c.`parent_id` = p.`id`
+    </select>
+    <select id="selectNestedList" resultType="com.atguigu.guli.service.edu.entity.Subject">
+        SELECT id, title FROM edu_subject WHERE parent_id=#{parentId};
+    </select>
+</mapper>

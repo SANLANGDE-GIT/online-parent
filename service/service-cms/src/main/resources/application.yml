@@ -1,0 +1,70 @@
+server:
+  port: 8140
+#  tomcat:
+#    max-threads: 2  #设置tomcat最大并发数量：默认200一般不修改
+spring:
+  datasource:
+    username: croot
+    password: root
+    url: jdbc:mysql://localhost:3306/guli_cms?serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    date-format: yyyy-MM-dd
+    # time-zone: GMT+8  如果数据库连接serverTimezone=GMT 请加上
+  profiles:
+    active: dev
+  application:
+    name: service-cms
+  #Nacos 注册地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        port: 8011 # 跟控制台交流的端口，随意指定一个未使用的端口即可
+        dashboard: localhost:8080 # 指定控制台服务的地址
+      eager: true #取消控制台懒加载，服务启动即可看到sentinel中对当前服务的监控
+      filter:
+        url-patterns: /** #默认拦截规则为 /*
+  redis:
+    host: 192.168.75.130
+    port: 6379
+      #password: 123456 #默认为空
+    lettuce:
+      pool:
+        max-active: 20  #最大连接数，负值表示没有限制，默认8
+        max-wait: -1    #最大阻塞等待时间，负值表示没限制，默认-1
+        max-idle: 8     #最大空闲连接，默认8
+        min-idle: 0     #最小空闲连接，默认0
+  session:
+    store-type: redis
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:com/atguigu/guli/service/cms/mapper/xml/*.xml
+    #日志配置
+#mybatis-plus配置
+#日志级别
+#logging:
+#  level
+#    #root: error
+#logging:
+#  level:
+    #com.atguigu.guli.service.edu.feign.OssFileService: debug #以什么级别监控哪个接口
+
+#设置Feign客户端超时时间（openfeign默认支持ribbon）
+ribbon:
+  ConnectTimeout: 5000
+  #指的是建立连接所用的时间，适用于网络状况正常的情况下，两端连接所用的时间
+  ReadTimeout: 5000
+  #指的是建立连接后从服务器读取到可用资源所用的时间
+#service-oss: # 调用的提供者的名称:配置负载均衡策略
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+
+#开启Feign对Sentinel的支持
+feign:
+  sentinel:
+    enabled: true

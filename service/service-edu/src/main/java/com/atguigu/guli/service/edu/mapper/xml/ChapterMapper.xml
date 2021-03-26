@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.guli.service.edu.mapper.ChapterMapper">
+
+    <resultMap id="getChapterListResultMap" type="com.atguigu.guli.service.edu.entity.vo.ChapterVo">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="sort" property="sort"/>
+        <collection property="videoVoList" column="id"
+                    select="com.atguigu.guli.service.edu.mapper.VideoMapper.getVideoVoList"/>
+    </resultMap>
+    <!--     List<ChapterVo> getChapterList(String courseId); -->
+    <select id="getChapterList" resultMap="getChapterListResultMap">
+        SELECT `id`,`title`,`sort` FROM edu_chapter WHERE course_id = #{courseId} order by sort
+    </select>
+    <!--     List<ChapterVo> getChapterListShortly(String courseId); -->
+    <resultMap id="getChapterListResultMap2" type="com.atguigu.guli.service.edu.entity.vo.ChapterVo">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="sort" property="sort"/>
+        <collection property="children" ofType="com.atguigu.guli.service.edu.entity.Video">
+            <id column="vo_id" property="id"/>
+            <result column="vo_title" property="title"/>
+            <result column="vo_sort" property="sort"/>
+            <result column="video_source_id" property="videoSourceId"/>
+            <result column="video_original_name" property="videoOriginalName"/>
+            <result column="is_free" property="free"/>
+        </collection>
+    </resultMap>
+    <select id="getChapterListShortly" resultMap="getChapterListResultMap2">
+        SELECT cp.`id`,
+        cp.`title`,
+        cp.`sort`,
+
+        vo.`id` AS vo_id,
+        vo.`title` AS vo_title,
+        vo.`sort` AS vo_sort,
+        vo.`video_source_id`,
+        vo.`video_original_name`,
+        vo.`is_free`
+        FROM edu_chapter cp
+        LEFT JOIN edu_video vo
+        ON cp.`id` = vo.`chapter_id`
+        WHERE cp.`id` = #{courseId}
+        order by cp.sort,vo.sort
+    </select>
+    <!-- 使用querywrapper 封装查询 -->
+    <!--List<ChapterVo> getChapterListByQueryWrapper(QueryWrapper queryWrapper);-->
+    <select id="getChapterListByQueryWrapper" resultMap="getChapterListResultMap2">
+        SELECT cp.`id`,
+        cp.`title`,
+        cp.`sort`,
+
+        vo.`id` AS vo_id,
+        vo.`title` AS vo_title,
+        vo.`sort` AS vo_sort,
+        vo.`video_source_id`,
+        vo.`video_original_name`,
+        vo.`is_free`
+        FROM edu_chapter cp
+        LEFT JOIN edu_video vo
+        ON cp.`id` = vo.`chapter_id`
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

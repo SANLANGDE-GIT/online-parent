@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: service-vod
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: ee8a5bfe-ea6e-4d88-9bed-0bbb0bd83498
+        group: dev
+        file-extension: yaml
